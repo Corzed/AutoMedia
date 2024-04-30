@@ -4,3 +4,6 @@ openai~=1.23.6
 pytube~=15.0.0
 selenium~=4.20.0
 whisper~=1.1.10
+ffmpeg-python~=0.2.0
+youtube-transcript-api~=0.6.2
+undetected-chromedriver~=3.5.5
