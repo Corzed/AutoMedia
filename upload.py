@@ -151,6 +151,19 @@ class YouTubeVideoUploader:
                 else:
                     raise  # Re-raise the last exception if all attempts fail
 
+    def like_video(self):
+        print("Heading to uploaded video...")
+        self.driver.get("https://studio.youtube.com")
+        sleep(10)
+        WebDriverWait(self.driver, 100).until(EC.presence_of_element_located(
+            (By.XPATH, '/html/body/ytcp-app/ytcp-entity-page/div/div/ytcp-navigation-drawer/nav/ytcp-animatable[2]/ul/li[2]/ytcp-ve/a/tp-yt-paper-icon-item/div[1]/tp-yt-iron-icon'))).click()
+        sleep(5)
+        WebDriverWait(self.driver, 100).until(EC.presence_of_element_located(
+            (By.XPATH, '/html/body/ytcp-app/ytcp-entity-page/div/div/main/div/ytcp-animatable[4]/ytcp-content-section/div/ytcp-primary-action-bar/div/div/tp-yt-paper-tabs/div/div/tp-yt-paper-tab[2]/div/ytcp-ve'))).click()
+        sleep(5)
+        
+        
+    
     def upload(self):
         print("[INFO] Initializing the WebDriver and setting up the browser...")
         self.setup_driver()
