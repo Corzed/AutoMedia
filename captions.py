@@ -51,18 +51,28 @@ def format_timestamp(seconds):
     return f"{hours:02}:{minutes:02}:{seconds:06.3f}".replace('.', ',')
 
 
-def burn_subtitles(video_path, subtitle_path, output_video_path, font_path):
+def burn_subtitles(video_path, subtitle_path, output_video_path, font_path, bottom_text=''):
     """
     Burn subtitles into the video using FFmpeg, with custom font settings and enhanced black outline.
+    Also adds text at the bottom middle of the video.
     """
     subtitle_filter = (
         f"subtitles={subtitle_path}:force_style='Alignment=10,FontName=TheBoldFont-Bold,"
         f"FontSize=15.5,PrimaryColour=&H00ffffff,OutlineColour=&H00000000,"
-        f"BorderStyle=1,Outline=1.3,Shadow=0'"  # Increase `Outline` as needed for thicker borders
+        f"BorderStyle=1,Outline=1.3,Shadow=0'"
     )
+
+    drawtext_filter = (
+        f"drawtext=text='{bottom_text}':x=(w-tw)/2:y=h-lh-10:fontfile={font_path}:"
+        f"fontsize=15:fontcolor=white:borderw=1:bordercolor=black@0.5"
+    )
+
+    filter_complex = f"[0:v][{subtitle_filter}][{drawtext_filter}]overlay[outv]"
+
     ffmpeg.input(video_path).output(
         output_video_path,
-        vf=subtitle_filter
+        filter_complex=filter_complex,
+        map="[outv]"
     ).run(overwrite_output=True)
 
 
@@ -70,6 +80,7 @@ def main(video_path):
     audio_path = 'temp_audio.wav'
     subtitle_path = 'temp_subtitles.srt'
     output_video_path = 'output_video.mp4'
+    bottom_text = "IP: Aligned.minehut.gg"
     font_path = "/path/to/your/font.ttf"  # Adjust this path to your font file location
 
     try:
@@ -83,7 +94,7 @@ def main(video_path):
         create_subtitle_file(segments, subtitle_path)
 
         # Burn subtitles into the video, using custom font
-        burn_subtitles(video_path, subtitle_path, output_video_path, font_path)
+        burn_subtitles(video_path, subtitle_path, output_video_path, font_path, bottom_text)
         print("Process completed. Subtitled video is available at:", output_video_path)
     except Exception as e:
         print("Error processing the video:", e)
