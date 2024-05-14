@@ -63,7 +63,7 @@ def burn_subtitles(video_path, subtitle_path, output_video_path, font_path, bott
     )
 
     drawtext_filter = (
-        f"drawtext=text='{bottom_text}':x=(w-tw)/2:y=h-lh-10:fontfile={font_path}:"
+        f"drawtext=text='{bottom_text}':x=(w-tw)/2:y=h-lh-10:FontName=TheBoldFont-Bold:"
         f"fontsize=15:fontcolor=white:borderw=1:bordercolor=black@0.5"
     )
 
