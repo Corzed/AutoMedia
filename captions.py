@@ -2,6 +2,7 @@ import ffmpeg
 import whisper
 import sys
 import os
+import subprocesse
 
 
 def extract_audio(video_path, audio_path):
@@ -51,36 +52,51 @@ def format_timestamp(seconds):
     return f"{hours:02}:{minutes:02}:{seconds:06.3f}".replace('.', ',')
 
 
-def burn_subtitles(video_path, subtitle_path, output_video_path, font_path, bottom_text=''):
+def burn_subtitles(video_path, subtitle_path, output_video_path, font_path):
     """
     Burn subtitles into the video using FFmpeg, with custom font settings and enhanced black outline.
-    Also adds text at the bottom middle of the video.
     """
     subtitle_filter = (
         f"subtitles={subtitle_path}:force_style='Alignment=10,FontName=TheBoldFont-Bold,"
         f"FontSize=15.5,PrimaryColour=&H00ffffff,OutlineColour=&H00000000,"
-        f"BorderStyle=1,Outline=1.3,Shadow=0'"
+        f"BorderStyle=1,Outline=1.3,Shadow=0'"  # Increase `Outline` as needed for thicker borders
     )
-
-    drawtext_filter = (
-        f"drawtext=text='{bottom_text}':x=(w-tw)/2:y=h-lh-10:FontName=TheBoldFont-Bold:"
-        f"fontsize=15:fontcolor=white:borderw=1:bordercolor=black@0.5"
-    )
-
-    filter_complex = f"[0:v][{subtitle_filter}][{drawtext_filter}]overlay[outv]"
-
     ffmpeg.input(video_path).output(
         output_video_path,
-        filter_complex=filter_complex,
-        map="[outv]"
+        vf=subtitle_filter
     ).run(overwrite_output=True)
+import ffmpeg
 
+def add_text_to_video(input_video_path, output_video_path, font_path, text):
+    """
+    Adds text to a video using the FFmpeg library.
+
+    Args:
+        input_video_path (str): Path to the input video file.
+        output_video_path (str): Path to the output video file.
+        font_path (str): Path to the font file (e.g., /path/to/TheBoldFont-Bold.ttf).
+        text (str): Text to be added to the video.
+
+    Returns:
+        None
+    """
+    # Load the input video
+    input_video = ffmpeg.input(input_video_path)
+
+    # Apply the drawtext filter
+    filtered = input_video.filter('drawtext', fontfile=font_path, text=text)
+
+    # Set the output file
+    output = ffmpeg.output(filtered, output_video_path)
+
+    # Run the FFmpeg command
+    ffmpeg.run(output)
 
 def main(video_path):
     audio_path = 'temp_audio.wav'
     subtitle_path = 'temp_subtitles.srt'
-    output_video_path = 'output_video.mp4'
-    bottom_text = "IP: Aligned.minehut.gg"
+    output_video_path = 'output_video2.mp4'
+    output_video_path2 = 'output_video.mp4'
     font_path = "/path/to/your/font.ttf"  # Adjust this path to your font file location
 
     try:
@@ -94,7 +110,8 @@ def main(video_path):
         create_subtitle_file(segments, subtitle_path)
 
         # Burn subtitles into the video, using custom font
-        burn_subtitles(video_path, subtitle_path, output_video_path, font_path, bottom_text)
+        burn_subtitles(video_path, subtitle_path, output_video_path, font_path)
+        add_text_to_video(output_video_path, output_video_path2, font_path, "test")
         print("Process completed. Subtitled video is available at:", output_video_path)
     except Exception as e:
         print("Error processing the video:", e)
