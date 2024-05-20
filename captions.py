@@ -65,9 +65,8 @@ def burn_subtitles(video_path, subtitle_path, output_video_path, font_path):
         output_video_path,
         vf=subtitle_filter
     ).run(overwrite_output=True)
-import ffmpeg
 
-def add_text_to_video(input_video_path, output_video_path, font_path, text):
+def add_text_to_video(input_video_path, output_video_path, font_path, text, font_size=24, x='(w-tw)/2', y='(h-th)/2'):
     """
     Adds text to a video using the FFmpeg library.
 
@@ -76,6 +75,9 @@ def add_text_to_video(input_video_path, output_video_path, font_path, text):
         output_video_path (str): Path to the output video file.
         font_path (str): Path to the font file (e.g., /path/to/TheBoldFont-Bold.ttf).
         text (str): Text to be added to the video.
+        font_size (int): Font size of the text (default is 24).
+        x (str): X-coordinate position of the text (default is centered horizontally).
+        y (str): Y-coordinate position of the text (default is centered vertically).
 
     Returns:
         None
@@ -83,8 +85,8 @@ def add_text_to_video(input_video_path, output_video_path, font_path, text):
     # Load the input video
     input_video = ffmpeg.input(input_video_path)
 
-    # Apply the drawtext filter
-    filtered = input_video.filter('drawtext', fontfile=font_path, text=text)
+    # Apply the drawtext filter with additional options
+    filtered = input_video.filter('drawtext', fontfile=font_path, text=text, fontsize=font_size, x=x, y=y, PrimaryColour=&H00ffffff, OutlineColour=&H00000000, BorderStyle=1,Outline=1.3,Shadow=0)
 
     # Set the output file
     output = ffmpeg.output(filtered, output_video_path)
