@@ -1,6 +1,30 @@
-# AutoMedia
+# AutoMedia 🎥
 
-AutoMedia creates short-form videos and automatically uploads them you youtube. 
+AutoMedia is a tool that creates short-form videos from existing content, ideal for podcasts, interviews, or TV shows. It uses AI to identify engaging segments and automates the process of clipping, captioning, and uploading videos to YouTube.
 
-### How it works:
-It fetches the video that you are aiming to clip, it then sends the transcript to gpt3.5 api and asks what the most engading segment is. it then finds the associated time frame in the transcript and cuts the video using moviepy accordingly. It then uses ffmpeg and whisper to create another transcript (I know this is inefficient but its easier to do) for the cut clip and uses that transcript to add captions that are insync with the person speaking. This is best used for podcasts/interviews, for example joe rogan or lex fridman, or tv shows, like young sheldon.
+## Features ✨
+
+- **Automated Clipping**: Extracts the most engaging video segments.
+- **AI-Powered Captioning**: Generates and synchronizes captions using Whisper and FFmpeg.
+- **YouTube Uploads**: Automatically uploads edited clips to YouTube.
+
+## Installation 📦
+
+```bash
+git clone https://github.com/Corzed/AutoMedia.git
+cd AutoMedia
+pip install -r requirements.txt
+```
+
+## Usage 🚀
+
+1. Configure your `.env` file based on the `.env.example`.
+2. Run `main.py` to start the video processing.
+
+## Contribution 🤝
+
+Contributions are welcome! Please open an issue or submit a pull request.
+
+## License 📄
+
+This project is licensed under the Apache-2.0 License.
